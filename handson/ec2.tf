@@ -1,36 +1,35 @@
 provider "aws" {
-  region = "us-east-1"
+  region = "us-west-2"
+}
+
+resource "aws_security_group" "demo_sg" {
+  name        = "demo_sg"
+  description = "SSH Access"
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 }
 
 resource "aws_instance" "demo-server" {
-    ami = "ami-08a0d1e16fc3f61ea"
-    instance_type = "t2.micro"
-    key_name = "Terraform"
-    security_groups = ["demo-sg"]
-}
-
-resource "aws_security_group" "demo-sg" {
-  name        = "demo-sg"
-  description = "SSH Access"
-  
-  ingress {
-    description      = "Shh access"
-    from_port        = 22
-    to_port          = 22
-    protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"]
-    }
-
-  egress {
-    from_port        = 0
-    to_port          = 0
-    protocol         = "-1"
-    cidr_blocks      = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"]
-  }
+  ami           = "ami-08a0d1e16fc3f61ea"  # Replace with your desired AMI ID
+  instance_type = "t2.micro"
+  key_name = "terraform"
+  vpc_security_group_ids = [aws_security_group.demo_sg.id]
 
   tags = {
-    Name = "ssh-prot"
-
+    Name = "demo-server"
   }
 }
+
+
