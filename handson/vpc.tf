@@ -83,7 +83,7 @@ resource "aws_security_group" "demo_sg" {
 resource "aws_instance" "demo_server" {
   ami                    = "ami-04b70fa74e45c3917"
   instance_type          = "t2.micro"
-  key_name               = "Terraform"
+  key_name               = "dpp"
   vpc_security_group_ids = [aws_security_group.demo_sg.id]
   subnet_id              = aws_subnet.dpp_public_subnet_01.id 
   for_each = toset(["jenkins-master", "build-slave", "ansible"])
